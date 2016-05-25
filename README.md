@@ -12,44 +12,44 @@ __AtinA__ (Athene's incredible AI) is an AI engine for my main project __Reborn_
   - [Mob declaration](#mob-declaration)
   - [Action](#action)
     - [Class definition](#class-definition)
-    - [Construction](#construction-1)
+    - [Construction](#construction-0)
   - [Task](#task)
     - [Action list](#action-list)
     - [Static construction](#static-construction)
     - [Dynamic construction](#dynamic-construction)
   - [AI](#ai)
-    - [Construction](#construction-2)
+    - [Construction](#construction-1)
     - [Public methods](#public-methods)
 - Tips (to do)
  
 ## DESCRIPTION
 
 __AtinA__ is composed of three layers: `Action`, `Task` and `AI`
-- `Action` is a fundamental AI unit, it represent single action, like standing up or walking to a certain destination. When `update` method is called, `Action` access and alters `mob`'s members related to managing AI, for example `destination`. In my code I use setter functions with passkey, but since I don't claim it's the most effective method of encapsulation, I don't enforce it and how `Action` access `mob` I leave to user's discretion.
+- `Action` is a fundamental AI unit, it represent single action, like standing up or walking to a certain destination. When `Update` method is called, `Action` access and alters `mob`'s members related to managing AI, for example `destination`. In my code I use setter functions with passkey, but since I don't claim it's the most effective method of encapsulation, I don't enforce it and how `Action` access `mob` I leave to user's discretion.
 - `Task` represents a single task, like working or going for a walk. `Task` can be _static_ (evaluated at construction time) or _dynamic_ (evaluated during execution), both of them are wrapped in general `Task` class. `Task` is implemented as a sequence of `Action`s. `condition ? action1 : action2` syntax can be used to customize `Task` at evaluation time.
 - `AI` controls what task to perform using `Behaviour` function. When stack with `Task`s gets empty, it calls `Behaviour` function which returns new `Task` according to rules set by user.
 
 ## TO DO
 
-- [x] ` ` ship this goddamn thing already
-- [ ] ` ` make a complete README.md
-- [ ] ` ` add _make_ file
-- [ ] ` ` make name in `Task` constructor optional
-- [ ] ` ` remove unnecessary dependencies (replace `std::string` with `const char *` etc)
-- [ ] ` ` adjust container choice for `AI` and `Task`
-- [ ] ` ` remove unused legacy code
-- [ ] ` ` more descriptive method names
-- [ ] ` ` use less intrusive namespacing and more conventional style
-- [ ] ` ` add native `Task` generator or enable condition evaluation for copy constructor
-- [ ] ` ` add native tool for pushing `Task` under condition without repushing every call
-- [ ] ` ` redesign `AI` and `Task` so it doesn't use pointer member `current` and guarantee no segfault
-- [ ] ` ` make decision tree return intigers instead of booleans
-- [ ] ` ` develop directed graph further for later use
-- [ ] ` ` add support for `__action_name__{__starting_variables__}` instead of `Action::New<__action_name__>(__starting_variables__)` syntax
-- [ ] ` ` finish development of scripting language for all elements of __AtinA__
-- [ ] ` ` write conversion tool from .tsk, .act and .ai to .hh/.cc
-- [ ] ` ` write conversion tool from .tsk, .act and .ai to .hh/.so and .hh/.dll
-- [ ] find out why this turns bold automaticaly `and after this` turns normal
+- [x] ship this goddamn thing already
+- [ ] make a complete README.md
+- [ ] add _make_ file
+- [ ] make name in `Task` constructor optional
+- [ ] remove unnecessary dependencies (replace `std::string` with `const char *` etc)
+- [ ] adjust container choice for `AI` and `Task`
+- [ ] remove unused legacy code
+- [ ] more descriptive method names
+- [ ] use less intrusive namespacing and more conventional style
+- [ ] add native `Task` generator or enable condition evaluation for copy constructor
+- [ ] add native tool for pushing `Task` under condition without repushing every call
+- [ ] redesign `AI` and `Task` so it doesn't use pointer member `current` and guarantee no segfault
+- [ ] make decision tree return intigers instead of booleans
+- [ ] develop directed graph further for later use
+- [ ] add support for `__action_name__{__starting_variables__}` instead of `Action::New<__action_name__>(__starting_variables__)` syntax
+- [ ] finish development of scripting language for all elements of __AtinA__
+- [ ] write conversion tool from .tsk, .act and .ai to .hh/.cc
+- [ ] write conversion tool from .tsk, .act and .ai to .hh/.so and .hh/.dll
+- [x] ~~find out why this turns bold automaticaly `and after this` turns normal~~ apparently it doesn't
 
 ## QUICK OVERVIEW
 
@@ -86,7 +86,7 @@ class __action_name__ : public Action::_action_base
   }
 
  private:
-  action_name( __starting_variables__ )
+  __action_name__( __starting_variables__ )
   : __starting_variables__(__starting_variables__)
   , __other_variables__(__some_values__)
   {}
