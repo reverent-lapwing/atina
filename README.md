@@ -20,13 +20,8 @@ __AtinA__ (Athene's incredible AI) is an AI engine for my main project __Reborn_
   - [AI](#ai)
     - [Construction](#construction-1)
     - [Public methods](#public-methods)
-<<<<<<< HEAD
 - Tutorial (to do)
 
-=======
-- Tips (to do)
- 
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 ## DESCRIPTION
 
 __AtinA__ is composed of three layers: `Action`, `Task` and `AI`
@@ -39,7 +34,6 @@ __AtinA__ is composed of three layers: `Action`, `Task` and `AI`
 - [x] ship this goddamn thing already
 - [ ] make a complete README.md
 - [ ] add _make_ file
-<<<<<<< HEAD
 - [x] make name in `Task` constructor optional
 - [ ] make name in `Action` constructor optional
 - [x] remove unnecessary dependencies (replace `std::string` with `const char *` etc)
@@ -68,39 +62,10 @@ In order to use __AtinA__ include "atina.hh" in your code and link `atina::mob_t
 #### ACTION
 
 Sets `mob` behaviour every time `AI`'s `Set()` method is called.
-=======
-- [ ] make name in `Task` constructor optional
-- [ ] remove unnecessary dependencies (replace `std::string` with `const char *` etc)
-- [ ] adjust container choice for `AI` and `Task`
-- [ ] remove unused legacy code
-- [ ] more descriptive method names
-- [ ] use less intrusive namespacing and more conventional style
-- [ ] add native `Task` generator or enable condition evaluation for copy constructor
-- [ ] add native tool for pushing `Task` under condition without repushing every call
-- [ ] redesign `AI` and `Task` so it doesn't use pointer member `current` and guarantee no segfault
-- [ ] make decision tree return intigers instead of booleans
-- [ ] develop directed graph further for later use
-- [ ] add support for `__action_name__{__starting_variables__}` instead of `Action::New<__action_name__>(__starting_variables__)` syntax
-- [ ] finish development of scripting language for all elements of __AtinA__
-- [ ] write conversion tool from .tsk, .act and .ai to .hh/.cc
-- [ ] write conversion tool from .tsk, .act and .ai to .hh/.so and .hh/.dll
-- [x] ~~find out why this turns bold automaticaly `and after this` turns normal~~ apparently it doesn't
-
-## QUICK OVERVIEW
-
-#### MOB DECLARATION
-
-`AI::mob_type` alias is defined in mob_declaration.hh file. It needs to relate to your mob class.
-
-#### ACTION
-
-Sets `mob` behaviour every time `ai.Set()` is called.
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 
 ###### Class definition:
 
 ```c++
-<<<<<<< HEAD
 class __action_name__ : public atina::_action_base
 {
  public:
@@ -111,35 +76,15 @@ class __action_name__ : public atina::_action_base
    return make_unique<__action_name__>({__starting_variables__});
   }
   unique_ptr<atina::_action_base> Copy()
-=======
-class __action_name__ : public Action::_action_base
-{
- public:
-  std::string name {"__action_name__"} // optional
- 
-  static unique_ptr<Action::_action_base> New( __starting_variables__  )
-  {
-   return make_unique<__action_name__>({__starting_variables__});
-  }
-  unique_ptr<Action::_action_base> Copy()
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
   {
    return New(__starting_variables__);
   }
 
-<<<<<<< HEAD
   status _update( atina::mob_type & mob )
   {
    __set_mob_state__();
 
    return __end_condition__ ? status::finished : status::not_finished;
-=======
-  Action::status _update( AI::mob_type & mob )
-  {
-   __set_mob_state__();
-
-   return __end_condition__ ? Action::status::finished : Action::status::not_finished;
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
   }
 
  private:
@@ -148,11 +93,7 @@ class __action_name__ : public Action::_action_base
   , __other_variables__(__some_values__)
   {}
 
-<<<<<<< HEAD
   const __starting_variables__;
-=======
-  __starting_variables__; // immutable, not declared const because actions need to be copy-assignable
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
   __other_variables__;
 }
 ```
@@ -160,11 +101,7 @@ class __action_name__ : public Action::_action_base
 ###### Construction
 
 ```c++
-<<<<<<< HEAD
 atina::Action::New<__action_name__>
-=======
-Action::New<__action_name__>
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 (
 __starting_variables__
 )
@@ -172,11 +109,7 @@ __starting_variables__
 
 #### TASK
 
-<<<<<<< HEAD
 Stores and controls execution of predefined set of `Action`s.
-=======
-Stores and controls execution of predifined set of `Action`s.
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 
 Tip: to evaluate `c ? t : f` statements every time `Task` is pushed into `AI`, create a wrapper function for the constructor. Copy constructor won't re-evaluate those statements since `Task` stores only `Action`s. Such function could look like this:
 
@@ -193,33 +126,19 @@ Initializer lists with `Action`s are used in both types of `Task`'s constructors
 // variant 1
  __action_static__,
 // variant 2
-<<<<<<< HEAD
  __condition_1__ ? __action_if_condition__ : atina::Action::None(), // evaluated at construction time
-=======
- __condition_1__ ? __action_if_condition__ : Action::None(), // evaluated at construction time
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 // variant 3
  __condition_2__ ? __action_if_true__ : __action_if_false__ // like the above,
  ...
 }
-<<<<<<< HEAD
 ```
-=======
- ```
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 
 ###### Static construction
 
 ```c++
-<<<<<<< HEAD
 atina::Task __task_name__
 {
  "__task_name__", // optional
-=======
-Task::Task __task_name__
-{
- "__task_name__",
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
  __mob_name__,
  __action_list__
 };
@@ -229,7 +148,6 @@ Task::Task __task_name__
 
 
 ```c++
-<<<<<<< HEAD
 atina::decision_tree_type __tree_name__
  {
  // variant 1
@@ -239,32 +157,14 @@ atina::decision_tree_type __tree_name__
  // variant 2
   {{__next__node__},
    {[](atina::mobe_type const & mob){ return true; },
-=======
-Task::decision_tree_type __tree_name__
- {
- // variant 1
-  {{__node_if_true__,__node_if_false__},
-   {[](AI::mob_type const & mob){ return __condition__ ? true : false; }, // condition evaluated when control reach this node
-   {__action_list_1__}}},
- // variant 2
-  {{__next__node__},
-   {[](AI::mobe_type const & mob){ return true; },
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
    {__action_list_2__}}},
   ...
  };
 
-<<<<<<< HEAD
 atina::Task __task_name__
 {
  "__task_name__", // optional
  __mob_name__,
-=======
-Task::Task __task_name__
-{
- "__task_name__",
- __mob_name__
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
  __tree_name__
 };
 ```
@@ -273,34 +173,20 @@ Moving control to node `-1` exits the tree and finish the `Task`. `Action` list 
 
 #### AI
 
-<<<<<<< HEAD
 Stores and controls execution of procedurally generated set of `Task`s.
-=======
-Stores and controls execution of proceduraly generated set of `Task`s.
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 
 ###### Construction
 
 ```c++
-<<<<<<< HEAD
 atina::Task __behaviour_function__( atina::mob_type mob )
-=======
-Task::Task __behaviour_function__( AI::mob_type mob )
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
 {
  if( __condition__ )
  {
   return __task_if_condition__;
  }
-<<<<<<< HEAD
 
  ...
 
-=======
- 
- ...
- 
->>>>>>> 7bf60ff2932636185e1fa40bbc488bd5172487a1
  return __task_if_no_other__;
 }
 
