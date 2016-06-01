@@ -1,0 +1,14 @@
+___________
+Patch 0.1.1
+
+01-06-2016
+
+* versions segregated into separate folders
+* example files separated from engine files
+* added "atina.hh" main header (now files using AtinA need to include "atina.hh" instead of "AI.hh")
+* added "atina_base.hh" header for forward declaration
+* "action.hh", "task.hh" and "AI.hh" contain only classes
+* every class is contained inside "atina" namespace
+* PassKey and directed_graph are contained inside "atina::utils" namespace
+* Task can be constructed without name
+* char const * used to store names instead of std::string
