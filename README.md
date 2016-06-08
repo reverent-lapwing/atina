@@ -35,9 +35,10 @@ __AtinA__ is composed of three layers: `Action`, `Task` and `AI`
 - [ ] make a complete README.md
 - [ ] add _make_ file
 - [x] make name in `Task` constructor optional
-- [ ] make name in `Action` constructor optional
+- [x] make name in `Action` class optional
 - [x] remove unnecessary dependencies (replace `std::string` with `const char *` etc)
-- [ ] adjust container choice for `AI` and `Task`
+- [x] adjust container choice for `AI` and `Task`
+- [ ] move Interupt and Continue to a separate file
 - [ ] remove unused legacy code
 - [ ] more descriptive method names
 - [ ] replace __mob_declaration.hh__ with implicit template if possible (and practical)
@@ -47,7 +48,7 @@ __AtinA__ is composed of three layers: `Action`, `Task` and `AI`
 - [ ] redesign `AI` and `Task` so it doesn't use pointer member `current` and guarantee no segfault
 - [ ] make decision tree return integers instead of booleans
 - [ ] develop directed graph further for later use
-- [ ] add support for `__action_name__{__starting_variables__}` instead of `atina::Action::New<__action_name__>(__starting_variables__)` syntax
+- [ ] add support for `_action_name__{__starting_variables__}` instead of `atina::Action::New<_action_name__>(__starting_variables__)` syntax
 - [ ] finish development of scripting language for all elements of __AtinA__
 - [ ] write conversion tool from .tsk, .act and .ai to .hh/.cc
 - [ ] write conversion tool from .tsk, .act and .ai to .hh/.so and .hh/.dll
@@ -66,16 +67,16 @@ Sets `mob` behaviour every time `AI`'s `Set()` method is called.
 ###### Class definition:
 
 ```c++
-class __action_name__ : public atina::_action_base
+class _action_name__ : public atina::action_base
 {
  public:
-  char const * name {"__action_name__"} // optional
+  char const * name {"_action_name__"} // optional
 
-  static unique_ptr<atina::_action_base> New( __starting_variables__  )
+  static unique_ptr<atina::action_base> New( __starting_variables__  )
   {
-   return make_unique<__action_name__>({__starting_variables__});
+   return make_unique<_action_name__>({__starting_variables__});
   }
-  unique_ptr<atina::_action_base> Copy()
+  unique_ptr<atina::action_base> Copy()
   {
    return New(__starting_variables__);
   }
@@ -88,7 +89,7 @@ class __action_name__ : public atina::_action_base
   }
 
  private:
-  __action_name__( __starting_variables__ )
+  _action_name__( __starting_variables__ )
   : __starting_variables__(__starting_variables__)
   , __other_variables__(__some_values__)
   {}
@@ -101,7 +102,7 @@ class __action_name__ : public atina::_action_base
 ###### Construction
 
 ```c++
-atina::Action::New<__action_name__>
+atina::Action::New<_action_name__>
 (
 __starting_variables__
 )
@@ -114,7 +115,7 @@ Stores and controls execution of predefined set of `Action`s.
 Tip: to evaluate `c ? t : f` statements every time `Task` is pushed into `AI`, create a wrapper function for the constructor. Copy constructor won't re-evaluate those statements since `Task` stores only `Action`s. Such function could look like this:
 
 ```c++
-Task::Task __task_name__(){ return {__constructor_arguments__}; }
+Task::Task _task_name__(){ return {__constructor_arguments__}; }
 ```
 
 ###### Action list
@@ -124,11 +125,11 @@ Initializer lists with `Action`s are used in both types of `Task`'s constructors
 ```c++
 {
 // variant 1
- __action_static__,
+ _action_static__,
 // variant 2
- __condition_1__ ? __action_if_condition__ : atina::Action::None(), // evaluated at construction time
+ __condition_1__ ? _action_if_condition__ : atina::Action::None(), // evaluated at construction time
 // variant 3
- __condition_2__ ? __action_if_true__ : __action_if_false__ // like the above,
+ __condition_2__ ? _action_if_true__ : _action_if_false__ // like the above,
  ...
 }
 ```
@@ -136,11 +137,11 @@ Initializer lists with `Action`s are used in both types of `Task`'s constructors
 ###### Static construction
 
 ```c++
-atina::Task __task_name__
+atina::Task _task_name__
 {
- "__task_name__", // optional
+ "_task_name__", // optional
  __mob_name__,
- __action_list__
+ _action_list__
 };
 ```
 
@@ -153,17 +154,17 @@ atina::decision_tree_type __tree_name__
  // variant 1
   {{__node_if_true__,__node_if_false__},
    {[](atina::mob_type const & mob){ return __condition__ ? true : false; }, // condition evaluated when control reach this node
-   {__action_list_1__}}},
+   {_action_list_1__}}},
  // variant 2
   {{__next__node__},
    {[](atina::mobe_type const & mob){ return true; },
-   {__action_list_2__}}},
+   {_action_list_2__}}},
   ...
  };
 
-atina::Task __task_name__
+atina::Task _task_name__
 {
- "__task_name__", // optional
+ "_task_name__", // optional
  __mob_name__,
  __tree_name__
 };
@@ -182,12 +183,12 @@ atina::Task __behaviour_function__( atina::mob_type mob )
 {
  if( __condition__ )
  {
-  return __task_if_condition__;
+  return _task_if_condition__;
  }
 
  ...
 
- return __task_if_no_other__;
+ return _task_if_no_other__;
 }
 
 AI::AI __ai_name__
