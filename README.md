@@ -1,4 +1,4 @@
-# AtinA v0.1.1
+# AtinA
 
 ## ABOUT
 
@@ -38,17 +38,17 @@ __AtinA__ is composed of three layers: `Action`, `Task` and `AI`
 - [x] make name in `Action` class optional
 - [x] remove unnecessary dependencies (replace `std::string` with `const char *` etc)
 - [x] adjust container choice for `AI` and `Task`
-- [ ] move Interupt and Continue to a separate file
+- [x] ~~move Interupt and Continue to a separate file~~ no longer required
 - [ ] remove unused legacy code
-- [ ] more descriptive method names
+- [x] more descriptive method names
 - [ ] replace __mob_declaration.hh__ with implicit template if possible (and practical)
 - [x] use less intrusive namespacing and more ~~conventional~~ consistent style
 - [ ] add native `Task` generator or enable condition evaluation for copy constructor
 - [ ] add native tool for pushing `Task` to `AI` under condition without repushing every call (see Mob::Mob::Update() in mob_mockup.cc)
-- [ ] redesign `AI` and `Task` so it doesn't use pointer member `current` and guarantee no segfault
+- [x] redesign `AI` and `Task` so it doesn't use pointer member `current` and guarantee no segfault
 - [ ] make decision tree return integers instead of booleans
-- [ ] develop directed graph further for later use
-- [ ] add support for `_action_name__{__starting_variables__}` instead of `atina::Action::New<_action_name__>(__starting_variables__)` syntax
+- [ ] develop (directed) graph further for later use
+- [x] add support for `__action_name__{__starting_variables__}` instead of `atina::Action::New<__action_name__>(__starting_variables__)` syntax
 - [ ] finish development of scripting language for all elements of __AtinA__
 - [ ] write conversion tool from .tsk, .act and .ai to .hh/.cc
 - [ ] write conversion tool from .tsk, .act and .ai to .hh/.so and .hh/.dll
@@ -62,26 +62,26 @@ In order to use __AtinA__ include "atina.hh" in your code and link `atina::mob_t
 
 #### ACTION
 
-Sets `mob` behaviour every time `AI`'s `Set()` method is called.
+Sets `mob` behaviour every time `AI`'s `Update()` method is called.
 
 ###### Class definition:
 
 ```c++
-class _action_name__ : public atina::action_base
+class __action_name__ : public atina::action_base
 {
  public:
-  char const * name {"_action_name__"} // optional
+  char const * name {"__action_name__"} // optional
 
-  static unique_ptr<atina::action_base> New( __starting_variables__  )
+  static atina::Action New( __starting_variables__ )
   {
-   return make_unique<_action_name__>({__starting_variables__});
+   return {make_unique<__action_name__>({__starting_variables__})};
   }
-  unique_ptr<atina::action_base> Copy()
+  atina::Action Copy()
   {
    return New(__starting_variables__);
   }
 
-  status _update( atina::mob_type & mob )
+  status update( atina::mob_type & mob )
   {
    __set_mob_state__();
 
@@ -89,7 +89,7 @@ class _action_name__ : public atina::action_base
   }
 
  private:
-  _action_name__( __starting_variables__ )
+  __action_name__( __starting_variables__ )
   : __starting_variables__(__starting_variables__)
   , __other_variables__(__some_values__)
   {}
@@ -102,7 +102,7 @@ class _action_name__ : public atina::action_base
 ###### Construction
 
 ```c++
-atina::Action::New<_action_name__>
+__action_name__::New
 (
 __starting_variables__
 )
@@ -137,9 +137,9 @@ Initializer lists with `Action`s are used in both types of `Task`'s constructors
 ###### Static construction
 
 ```c++
-atina::Task _task_name__
+atina::Task __task_name__
 {
- "_task_name__", // optional
+ "__task_name__", // optional
  __mob_name__,
  _action_list__
 };
@@ -162,9 +162,9 @@ atina::decision_tree_type __tree_name__
   ...
  };
 
-atina::Task _task_name__
+atina::Task __task_name__
 {
- "_task_name__", // optional
+ "__task_name__", // optional
  __mob_name__,
  __tree_name__
 };
@@ -183,12 +183,12 @@ atina::Task __behaviour_function__( atina::mob_type mob )
 {
  if( __condition__ )
  {
-  return _task_if_condition__;
+  return __task_if_condition__;
  }
 
  ...
 
- return _task_if_no_other__;
+ return __task_if_no_other__;
 }
 
 AI::AI __ai_name__
@@ -200,7 +200,10 @@ AI::AI __ai_name__
 
 ###### Public methods
 
-- `void Push(Task::Task)` - interupts current `Task` by pushing following `Task`s onto a stack in a following order: `Task::Continue`, task passed as a function argument and `Task::Interrupt`. `Task::Interrupt` and `Task::Continue` are ordinary `Task`s defined by user, wrapped in a function an empty by default.
-	 - `Task::Interrupt` contains `Action`s that should be performed before pushed `Task` (place tools from hand into an inventory).
-	 - `Task::Continue` contains `Action`s that should be performed before previous `Task` can continue (take from inventory reqired tool).
-- `void Set()` - calls `Update` method of current `Action` and manages any changes if it returned __finished__ flag. If there is no `Action` to call, push new Task chosen by algorythym in `Behaviour` function.
+- `void Interrupt(atina::Task task)`
+  interrupts current `Task` by pushing `task` in front of the queue
+- `void Interrupt(atina::Task task, atina::Task interruption, atina::Task continuation)`
+  interrupts current `Task` by pushing `task` in front of the queue after `interruption` and before `continuation`
+- `void Queue(atina::Task task)`
+  add `task` to the end of the queue
+- `void Update()` - calls `Update` method of current `Action` and manages any changes if it returned __finished__ flag. If there is no `Action` to call, push new `Task` chosen by algorithm specified in `Behaviour` function.
